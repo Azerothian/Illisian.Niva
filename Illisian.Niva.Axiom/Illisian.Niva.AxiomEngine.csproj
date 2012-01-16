@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Awesomium.Core, Version=1.6.3.0, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214, processorArchitecture=x86" />
     <Reference Include="Axiom">
       <HintPath>binrefs\Axiom.dll</HintPath>
     </Reference>
@@ -53,7 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RenderItems\BasicCube.cs" />
+    <Compile Include="AwesomiumUtil.cs" />
+    <Compile Include="RenderItems\BasicCube.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RenderItems\CubeBrowser.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="IRenderItem.cs" />
@@ -64,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="media\Font\Arial.fontdef" />
     <None Include="media\Materials\TestImage.material" />
   </ItemGroup>
   <ItemGroup>

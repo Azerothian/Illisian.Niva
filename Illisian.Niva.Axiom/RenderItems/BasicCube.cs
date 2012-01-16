@@ -41,5 +41,11 @@ namespace Illisian.Niva.AxiomEngine
 		{
 
 		}
+
+
+		public void OnUpdateInput(Axiom.Input.InputReader inputReader)
+		{
+
+		}
 	}
 }

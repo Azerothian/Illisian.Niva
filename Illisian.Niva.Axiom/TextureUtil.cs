@@ -96,7 +96,7 @@ namespace Illisian.Niva.AxiomEngine
 		/// <param name="textureWidth">Width of the texture.</param>
 		/// <param name="texture">The texture.</param>
 		/// <param name="material">The material.</param>
-		public static void CreateDynamicTextureAndMaterial(string TextureName, string MaterialName, int textureHeight, int textureWidth, out Texture texture, out Material material)
+		public static void CreateDynamicTextureAndMaterial(string TextureName, string MaterialName, int textureWidth, int textureHeight, out Texture texture, out Material material)
 		{
 			texture = TextureManager.Instance.CreateManual(TextureName,
 						ResourceGroupManager.DefaultResourceGroupName,

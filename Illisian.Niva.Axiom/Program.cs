@@ -10,38 +10,30 @@ using Axiom.Framework.Configuration;
 
 namespace Illisian.Niva.AxiomEngine
 {
-	class Program : IWindowEventListener
+	class Program
 	{
-		static Program _startup;
+
 		static void Main(string[] args)
 		{
-			_startup = new Program();
-			_startup.Initialise();
-		}
-
-
-
-		RenderWindow _renderWindow;
-		Root _root;
-		public void Initialise()
-		{
 			IConfigurationManager ConfigurationManager = ConfigurationManagerFactory.CreateDefault();
-			using (_root = new Root("game.log"))
+			using (Root _root = new Root("game.log"))
 			{
 				ConfigurationManager.RestoreConfiguration(_root);
 				if (ConfigurationManager.ShowConfigDialog(_root))
 				{
 					ConfigurationManager.SaveConfiguration(_root);
 
-					using (_renderWindow = _root.Initialize(true, "Illisian.Niva"))
+					using (RenderWindow _renderWindow = _root.Initialize(true, "Illisian.Niva"))
 					{
-						WindowEventMonitor.Instance.RegisterListener(_renderWindow, this);
-
 
 						var game = new Game(_root, _renderWindow);
+						WindowEventMonitor.Instance.RegisterListener(_renderWindow, game);
 						game.OnLoad();
 						game.CreateScene();
 						_root.FrameRenderingQueued += game.OnRenderFrame;
+						_root.FrameStarted += game.UpdateInput;
+						_root.FrameStarted += game.UpdateOverlay;
+						_root.FrameEnded += game.OnRenderFrameEnd;
 						_root.StartRendering();
 
 						game.OnUnload();
@@ -51,21 +43,10 @@ namespace Illisian.Niva.AxiomEngine
 			}
 		}
 
-		public void WindowClosed(RenderWindow rw)
+		public void Initialise()
 		{
-			_root.Shutdown();
-		}
+			
 
-		public void WindowFocusChange(RenderWindow rw)
-		{
-		}
-
-		public void WindowMoved(RenderWindow rw)
-		{
-		}
-
-		public void WindowResized(RenderWindow rw)
-		{
 		}
 
 

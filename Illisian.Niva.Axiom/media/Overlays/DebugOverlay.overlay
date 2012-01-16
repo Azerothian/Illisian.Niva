@@ -1,0 +1,29 @@
+// The name of the overlay comes first
+Debug/DebugOverlay
+{
+    zorder 200
+
+    container Panel(MyOverlayElements/TestPanel)
+    {
+        // Center it horizontally, put it at the top
+        left 0.25
+        top 0
+        width 0.5
+        height 0.1
+
+
+        element TextArea(Debug/DisplayText)
+		{
+			font_name Arial
+			char_height 0.08
+			colour_top 1 1 0
+			colour_bottom 1 0.2 0.2
+			left 0.03
+			top 0.02
+			width 0.12
+			height 0.09
+			text Hi
+		}
+    }
+
+}

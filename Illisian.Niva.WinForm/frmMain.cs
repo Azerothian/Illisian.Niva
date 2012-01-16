@@ -126,6 +126,27 @@ namespace Illisian.Niva.WinForm
 
 			
 		}
+
+		private void textBox1_KeyDown(object sender, KeyEventArgs e)
+		{
+			Core.BrowserManager[id].KeyDown(e.GetKeyboardEvent(WebKeyType.KeyDown));
+		}
+
+		private void textBox1_KeyUp(object sender, KeyEventArgs e)
+		{
+			Core.BrowserManager[id].KeyUp(e.GetKeyboardEvent(WebKeyType.KeyUp));
+		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			Core.BrowserManager[id].KeyPress(e.GetKeyboardEvent());
+
+		}
 		
 
 

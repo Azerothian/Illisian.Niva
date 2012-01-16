@@ -12,5 +12,7 @@ namespace Illisian.Niva.AxiomEngine
 		void CreateScene();
 		void OnRenderFrame(long timeDelta);
 		void OnUnload();
+
+		void OnUpdateInput(Axiom.Input.InputReader inputReader);
 	}
 }

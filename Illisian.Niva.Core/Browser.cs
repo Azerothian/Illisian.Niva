@@ -174,7 +174,9 @@ namespace Illisian.Niva
 		public void KeyDown(WebKeyboardEvent webKeyboardEvent)
 		{
 			if (webView != null && webView.IsEnabled)
+			{
 				webView.InjectKeyboardEvent(webKeyboardEvent);
+			}
 		}
 
 		public void KeyUp(WebKeyboardEvent webKeyboardEvent)
