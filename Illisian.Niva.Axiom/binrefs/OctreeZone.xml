@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OctreeZone</name>
+    </assembly>
+    <members>
+        <member name="F:OctreeZone.OctreeZone.rootOctree">
+            The root octree
+        </member>
+        <member name="F:OctreeZone.OctreeZone.maxDepth">
+            Max depth for the tree
+        </member>
+        <member name="F:OctreeZone.OctreeZone.box">
+            Size of the octree
+        </member>
+        <member name="M:OctreeZone.OctreeZone.RemoveNodeFromOctree(Axiom.SceneManagers.PortalConnected.PCZSceneNode)">
+            Only removes the node from the octree.  It leaves the octree, even if it's empty.
+        </member>
+        <member name="M:OctreeZone.OctreeZone.CreateNodeZoneData(Axiom.SceneManagers.PortalConnected.PCZSceneNode)">
+            create zone specific data for a node
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mTerrainZone">
+            Parent Zone
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mOptions">
+            Link to shared options
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mRenderLevel">
+            The current LOD level
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mLastNextLevel">
+            The previous 'next' LOD level down, for frame coherency
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mLODMorphFactor">
+            The morph factor between this and the next LOD level down
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mMinLevelDistSqr">
+            List of squared distances at which LODs change
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mNeighbors">
+            Connection to tiles four neighbours
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mLightListDirty">
+            Whether light list need to re-calculate
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mLightList">
+            Cached light list
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mBounds">
+            Bounding box of this tile
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mCenter">
+            The center point of this tile
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mInit">
+            Whether this tile has been initialised
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mMainBuffer">
+            The buffer with all the renderable geometry in it
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mDeltaBuffers">
+            Optional set of delta buffers, used to morph from one LOD to the next
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mPositionBuffer">
+            System-memory buffer with just positions in it, for CPU operations
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mForcedRenderLevel">
+            Forced rendering LOD level, optional
+        </member>
+        <member name="F:OctreeZone.TerrainZoneRenderable.mNextLevelDown">
+            Array of LOD indexes specifying which LOD is the next one down
+            (deals with clustered error metrics which cause LODs to be skipped)
+        </member>
+        <member name="M:OctreeZone.TerrainZoneRenderable.Index(System.Int32,System.Int32)">
+            Returns the index into the height array for the given coords. 
+        </member>
+        <member name="M:OctreeZone.TerrainZoneRenderable.Vertex(System.Int32,System.Int32,System.Int32)">
+            Returns the  vertex coord for the given coordinates 
+        </member>
+        <member name="M:OctreeZone.TerrainZoneRenderable.UpdateCustomGpuParameter(Axiom.Graphics.GpuProgramParameters.AutoConstantEntry,Axiom.Graphics.GpuProgramParameters)">
+            <summary>
+            	Update a custom GpuProgramParameters constant which is derived from
+            	information only this Renderable knows.
+            </summary>
+            <remarks>
+            	This method allows a Renderable to map in a custom GPU program parameter
+            	based on it's own data. This is represented by a GPU auto parameter
+            	of AutoConstantType.Custom, and to allow there to be more than one of these per
+            	Renderable, the 'data' field on the auto parameter will identify
+            	which parameter is being updated. The implementation of this method
+            	must identify the parameter being updated, and call a 'SetConstant'
+            	method on the passed in <see cref="T:Axiom.Graphics.GpuProgramParameters"/> object, using the details
+            	provided in the incoming auto constant setting to identify the index
+            	at which to set the parameter.
+            </remarks>
+            <param name="constantEntry">The auto constant entry referring to the parameter being updated.</param>
+            <param name="param">The parameters object which this method should call to set the updated parameters.</param>
+        </member>
+        <member name="M:OctreeZone.TerrainZoneRenderable.GetWorldTransforms(Axiom.Math.Matrix4[])">
+            <summary>
+               Gets the world transform matrix / matrices for this renderable object.
+            </summary>
+            <remarks>
+               If the object has any derived transforms, these are expected to be up to date as long as
+               all the SceneNode structures have been updated before this is called.
+             <p/>
+               This method will populate xform with 1 matrix if it does not use vertex blending. If it
+               does use vertex blending it will fill the passed in pointer with an array of matrices,
+               the length being the value returned from getNumWorldTransforms.
+            </remarks>
+        </member>
+        <member name="M:OctreeZone.TerrainZoneRenderable.GetSquaredViewDepth(Axiom.Core.Camera)">
+            <summary>
+            	Returns the camera-relative squared depth of this renderable.
+            </summary>
+            <remarks>
+            	Used to sort transparent objects. Squared depth is used rather than
+            	actual depth to avoid having to perform a square root on the result.
+            </remarks>
+            <param name="camera"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.BoundingBox">
+            Bounding box of this tile
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.BoundingRadius">
+            <summary>
+            	An abstract method required by subclasses to return the bounding box of this object in local coordinates.
+            </summary>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.Lights">
+            <summary>
+               Gets a list of lights, ordered relative to how close they are to this renderable.
+            </summary>
+            <remarks>
+               Directional lights, which have no position, will always be first on this list.
+            </remarks>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.NormalizeNormals">
+            <summary>
+               Returns whether or not this Renderable wishes the hardware to normalize normals.
+            </summary>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.NumWorldTransforms">
+            <summary>
+               Gets the number of world transformations that will be used for this object.
+            </summary>
+            <remarks>
+               When a renderable uses vertex blending, it uses multiple world matrices instead of a single
+               one. Each vertex sent to the pipeline can reference one or more matrices in this list
+               with given weights.
+               If a renderable does not use vertex blending this method returns 1, which is the default for
+               simplicity.
+            </remarks>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.UseIdentityProjection">
+            <summary>
+               Returns whether or not to use an 'identity' projection.
+            </summary>
+            <remarks>
+               Usually IRenderable objects will use a projection matrix as determined
+               by the active camera. However, if they want they can cancel this out
+               and use an identity projection, which effectively projects in 2D using
+               a {-1, 1} view space. Useful for overlay rendering. Normal renderables need
+               not override this.
+            </remarks>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.UseIdentityView">
+            <summary>
+               Returns whether or not to use an 'identity' projection.
+            </summary>
+            <remarks>
+               Usually IRenderable objects will use a view matrix as determined
+               by the active camera. However, if they want they can cancel this out
+               and use an identity matrix, which means all geometry is assumed
+               to be relative to camera space already. Useful for overlay rendering.
+               Normal renderables need not override this.
+            </remarks>
+        </member>
+        <member name="P:OctreeZone.TerrainZoneRenderable.PolygonModeOverrideable">
+            <summary>
+            Gets whether this renderable's chosen detail level can be
+            overridden (downgraded) by the camera setting.
+            override true means that a lower camera detail will override this
+            renderables detail level, false means it won't.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:OctreeZone.TerrainZoneRenderable.WorldOrientation" -->
+        <!-- Badly formed XML comment ignored for member "P:OctreeZone.TerrainZoneRenderable.WorldPosition" -->
+        <member name="P:OctreeZone.TerrainZoneRenderable.TypeFlags">
+            <summary>
+            Get the 'type flags' for this <see cref="T:OctreeZone.TerrainZoneRenderable"/>.
+            </summary>
+            <seealso cref="P:Axiom.Core.MovableObject.TypeFlags"/>
+        </member>
+        <member name="F:OctreeZone.TerrainZonePageSource.mTerrainZone">
+            Link back to parent manager
+        </member>
+        <member name="F:OctreeZone.TerrainZonePageSource.mAsyncLoading">
+            Has asynchronous loading been requested?
+        </member>
+        <member name="F:OctreeZone.TerrainZonePageSource.mPageSize">
+            The expected size of the page in number of vertices
+        </member>
+        <member name="F:OctreeZone.TerrainZonePageSource.mTileSize">
+            The expected size of a tile in number of vertices
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.pageSize">
+            The size of one edge of a terrain page, in vertices
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.tileSize">
+            The size of one edge of a terrain tile, in vertices
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.tilesPerPage">
+            Precalculated number of tiles per page
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.primaryCamera">
+            The primary camera, used for error metric calculation and page choice
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.maxGeoMipMapLevel">
+            The maximum terrain geo-mipmap level
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.scale">
+            The scale factor to apply to the terrain (each vertex is 1 unscaled unit
+            away from the next, and height is from 0 to 1)
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.maxPixelError">
+            The maximum pixel error allowed
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.useTriStrips">
+            Whether we should use triangle strips
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.detailTile">
+            The number of times to repeat a detail texture over a tile
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.lodMorph">
+            Whether LOD morphing is enabled
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.lodMorphStart">
+            At what point (parametric) should LOD morphing start
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.lit">
+            Whether dynamic lighting is enabled
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.coloured">
+            Whether vertex colours are enabled
+        </member>
+        <member name="F:OctreeZone.TerrainZoneOptions.terrainMaterial">
+            Pointer to the material to use to render the terrain
+        </member>
+        <member name="T:OctreeZone.Octree">
+            <summary>
+            Summary description for Octree.
+            </summary>
+        </member>
+        <member name="F:OctreeZone.Octree.nunodeList">
+            Returns the number of scene nodes attached to this octree
+        </member>
+        <member name="F:OctreeZone.Octree.nodeList">
+            Public list of SceneNodes attached to this particular octree
+        </member>
+        <member name="F:OctreeZone.Octree.box">
+            The bounding box of the octree
+            		@remarks
+            		This is used for octant index determination and rendering, but not culling
+        </member>
+        <member name="F:OctreeZone.Octree.wireBoundingBox">
+            Creates the wire frame bounding box for this octant
+        </member>
+        <member name="F:OctreeZone.Octree.halfSize">
+            Vector containing the dimensions of this octree / 2
+        </member>
+        <member name="F:OctreeZone.Octree.Children">
+            3D array of children of this octree.
+            		@remarks
+            		Children are dynamically created as needed when nodes are inserted in the Octree.
+            		If, later, the all the nodes are removed from the child, it is still kept arround.
+        </member>
+        <member name="M:OctreeZone.Octree.IsTwiceSize(Axiom.Math.AxisAlignedBox)">
+             <summary>
+              Determines if this octree is twice as big as the given box.
+            @remarks
+            	This method is used by the OctreeSceneManager to determine if the given
+            	box will fit into a child of this octree.
+             </summary>
+        </member>
+        <member name="M:OctreeZone.Octree.GetChildIndexes(Axiom.Math.AxisAlignedBox,System.Int32@,System.Int32@,System.Int32@)">
+             <summary>
+             Returns the appropriate indexes for the child of this octree into which the box will fit.
+            @remarks
+            	This is used by the OCtreeSceneManager to determine which child to traverse next when
+            finding the appropriate octree to insert the box.  Since it is a loose octree, only the
+            center of the box is checked to determine the octant.
+             </summary>
+        </member>
+        <member name="M:OctreeZone.Octree.intersect(Axiom.Math.PlaneBoundedVolume,Axiom.Math.AxisAlignedBox)">
+            Checks how the axis aligned box intersects with the plane bounded volume
+        </member>
+        <member name="M:OctreeZone.Octree.intersect(Axiom.Math.AxisAlignedBox,Axiom.Math.AxisAlignedBox)">
+            Checks how the second box intersects with the first.
+        </member>
+        <member name="M:OctreeZone.Octree.intersect(Axiom.Math.Sphere,Axiom.Math.AxisAlignedBox)">
+            Checks how the box intersects with the sphere.
+        </member>
+        <member name="M:OctreeZone.Octree._getChildIndexes(Axiom.Math.AxisAlignedBox,System.Int32@,System.Int32@,System.Int32@)">
+            It's assumed the the given box has already been proven to fit into
+            a child.  Since it's a loose octree, only the centers need to be
+            compared to find the appropriate node.
+        </member>
+        <member name="P:OctreeZone.Octree.CullBounds">
+            <summary>
+             Creates the AxisAlignedBox used for culling this octree.
+            </summary>
+            <remarks>
+                Since it's a loose octree, the culling bounds can be different than the actual bounds of the octree.
+            </remarks>
+        </member>
+        <member name="F:OctreeZone.OctreeZoneData.mOctant">
+            Octree this node is attached to.
+        </member>
+        <member name="M:OctreeZone.OctreeZoneData._isIn(Axiom.Math.AxisAlignedBox)">
+            Since we are loose, only check the center.
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mTerrainRoot">
+            The node to which all terrain tiles are attached
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mOptions">
+            Terrain size, detail etc
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mUseCustomMaterial">
+            Should we use an externally-defined custom material?
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mCustomMaterialName">
+            The name of the custom material to use
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mWorldTextureName">
+            The name of the world texture
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mDetailTextureName">
+            The name of the detail texture
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mUseNamedParameterLodMorph">
+            Are we using a named parameter to hook up LOD morph?
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mLodMorphParamName">
+            The name of the parameter to send the LOD morph to
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mLodMorphParamIndex">
+            The index of the parameter to send the LOD morph to
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mPagingEnabled">
+            Whether paging is enabled, or whether a single page will be used
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mLivePageMargin">
+            The number of pages to render outside the 'home' page
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mBufferedPageMargin">
+            The number of pages to keep loaded outside the 'home' page
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mTerrainZonePages">
+            Grid of buffered pages
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mIndexCache">
+            Shared list of index buffers
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mLevelIndex">
+            Shared array of IndexData (reuse indexes across tiles)
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mPageSources">
+            Map of source type -> TerrainZonePageSource
+        </member>
+        <member name="F:OctreeZone.TerrainZone.mActivePageSource">
+            The currently active page source
+        </member>
+        <member name="M:OctreeZone.TerrainZone.CheckSize(System.Int32)">
+            Validates that the size picked for the terrain is acceptable
+        </member>
+        <member name="M:OctreeZone.TerrainZone.SetEnclosureNode(Axiom.SceneManagers.PortalConnected.PCZSceneNode)">
+            Set the enclosure node for this TerrainZone
+        </member>
+        <member name="P:OctreeZone.TerrainZone.Options">
+            Terrain size, detail etc
+        </member>
+        <member name="P:OctreeZone.TerrainZone.LevelIndex">
+            Shared array of IndexData (reuse indexes across tiles)
+        </member>
+        <member name="P:OctreeZone.TerrainZone.IndexCache">
+            Shared list of index buffers
+        </member>
+        <member name="F:OctreeZone.TerrainZonePage.tiles">
+            2-dimensional vector of tiles, pre-allocated to the correct size
+        </member>
+        <member name="F:OctreeZone.TerrainZonePage.tilesPerPage">
+            The number of tiles across a page
+        </member>
+        <member name="F:OctreeZone.TerrainZonePage.pageSceneNode">
+            The scene node to which all the tiles for this page are attached
+        </member>
+        <member name="M:OctreeZone.TerrainZonePage.GetTerrainZoneTile(System.UInt16,System.UInt16)">
+            Returns the TerrainZoneRenderable Tile with given index
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mIsRaw">
+            Is this input RAW?
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mFlipTerrainZone">
+            Should we flip terrain vertically?
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mImage">
+            Image containing the source heightmap if loaded from non-RAW
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mRawData">
+            Arbitrary data loaded from RAW
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mPage">
+            The (single) terrain page this source will provide
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mSource">
+            Source file name
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mRawSize">
+            Manual size if source is RAW
+        </member>
+        <member name="F:OctreeZone.HeightmapTerrainZonePageSource.mRawBpp">
+            Manual bpp if source is RAW
+        </member>
+    </members>
+</doc>
