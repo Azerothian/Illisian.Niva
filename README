@@ -1,5 +1,16 @@
-Requires Awesomium SDK
-https://awesomium.com/
+Library Requirements
+
+Awesomium 1.6.3b SDK - https://awesomium.com/
+
+Axiom 0.8.0.0RC - http://axiom3d.net - (Libs included in binrefs of Illisian.Niva.AxiomEngine)
+
 
 -- Known Issues -- 
+-- General
 Youtube crashes... dont complain, apparently its fixed in 1.6.4 of awesomium.
+
+-- Axiom Demo
+Cube turns black when it tries to render the web page
+
+-- Winform Demo
+Key Input Does not work on WinForm Demo... Events dont fire on the winform...
