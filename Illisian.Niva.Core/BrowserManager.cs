@@ -12,7 +12,7 @@ namespace Illisian.Niva
 		Dictionary<Guid, Browser> _browsers = new Dictionary<Guid, Browser>();
 		public BrowserManager()
 		{
-			//WebCore.SuppressPrinterDialog(true);
+			//WebCore.SuppressPrinterDialog(true); //This seems to freeze everything.
 		}
 
 

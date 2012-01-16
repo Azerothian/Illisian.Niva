@@ -19,22 +19,23 @@ namespace Illisian.Niva.AxiomEngine
 		private Viewport _viewport;
 		private Light _light;
 
-		private CubeBrowser _cubeBrowser;
+		List<IRenderItem> _renderItem;
 
-		private OverlayBrowser _overlayBrowser;
 
 
 		long timeLast, timeNow, timeDelta;
 
 		public Game(Root root, RenderWindow window)
 		{
+			_renderItem = new List<IRenderItem>();
 			_root = root;
 			_window = window;
+			_renderItem = new List<IRenderItem>();
 		}
 
 		public void OnLoad()
 		{
-			ResourceGroupManager.Instance.AddResourceLocation("media", "Folder", true);
+			//ResourceGroupManager.Instance.AddResourceLocation("media", "Folder", true);
 
 			_root.SceneManager = _sceneManager = _root.CreateSceneManager(SceneType.ExteriorClose);
 			_sceneManager.ClearScene();
@@ -47,7 +48,7 @@ namespace Illisian.Niva.AxiomEngine
 			_camera.AutoAspectRatio = true;
 
 			_viewport = _window.AddViewport(_camera, 0, 0, 1.0f, 1.0f, 100);
-			_viewport.BackgroundColor = ColorEx.CornflowerBlue;
+			_viewport.BackgroundColor = ColorEx.DarkBlue;
 
 			_light = _sceneManager.CreateLight("light1");
 			_light.Type = LightType.Directional;
@@ -55,26 +56,42 @@ namespace Illisian.Niva.AxiomEngine
 			_light.Diffuse = ColorEx.Blue;
 			_light.Specular = ColorEx.Blue;
 			//_light.Direction = new Vector3(0, 0, -300);
-			_sceneManager.AmbientLight = ColorEx.Wheat;// new ColorEx(0.2f, 0.2f, 0.2f);
+			_sceneManager.AmbientLight = ColorEx.White;// new ColorEx(0.2f, 0.2f, 0.2f);
 			
 			ResourceGroupManager.Instance.InitializeAllResourceGroups();
 
-			_cubeBrowser = new CubeBrowser(_root);
-			_overlayBrowser = new OverlayBrowser(_root);
+
+			_renderItem.Add(new BasicCube());
+			_renderItem.Add(new CubeBrowser());
+			lock (_renderItem)
+			{
+				foreach (var i in _renderItem)
+				{
+					i.Initialise(_root);
+				}
+			}
 		}
-
-
 
 		public void CreateScene()
 		{
-			_cubeBrowser.CreateScene();
-			_overlayBrowser.CreateScene();
+			lock (_renderItem)
+			{
+				foreach (var i in _renderItem)
+				{
+					i.CreateScene();
+				}
+			}
 		}
 
 		public void OnUnload()
 		{
-			_cubeBrowser.OnUnload();
-			_overlayBrowser.OnUnload();
+			lock (_renderItem)
+			{
+				foreach (var i in _renderItem)
+				{
+					i.OnUnload();
+				}
+			}
 		}
 
 		public void OnRenderFrame(object s, FrameEventArgs e)
@@ -82,8 +99,14 @@ namespace Illisian.Niva.AxiomEngine
 			timeLast = timeNow;
 			timeNow = _root.Timer.Milliseconds;
 			timeDelta = timeNow - timeLast;
-			_cubeBrowser.OnRenderFrame(timeDelta);
-			_overlayBrowser.OnRenderFrame(timeDelta);
+			//_cubeBrowser.OnRenderFrame(timeDelta);
+			lock (_renderItem)
+			{
+				foreach (var i in _renderItem)
+				{
+					i.OnRenderFrame(timeDelta);
+				}
+			}
 
 		}
 
