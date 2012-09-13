@@ -91,7 +91,7 @@ namespace Illisian.Niva
 
 		void Render()
 		{
-			if ((webView == null) || !webView.IsEnabled)
+			if ((webView == null) || !webView.IsLive)
 				return;
 			if (!webView.IsDirty)
 				return;
@@ -141,39 +141,39 @@ namespace Illisian.Niva
 		}
 		public void Resize(int height, int width)
 		{
-			if (webView != null && webView.IsEnabled)
+			if (webView != null && webView.IsLive)
 				webView.Resize(width, height);
 		}
 		public void MouseDown(MouseButton button)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 				webView.InjectMouseDown(button);
 		}
 		public void MouseUp(MouseButton button)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 				webView.InjectMouseUp(button);
 		}
 		public void MouseMove(int x, int y)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 				webView.InjectMouseMove(x, y);
 		}
 		public void MouseWheel(int delta)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 				webView.InjectMouseWheel(delta);
 		}
 
 		public void KeyPress(WebKeyboardEvent webKeyboardEvent)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 				webView.InjectKeyboardEvent(webKeyboardEvent);
 		}
 
 		public void KeyDown(WebKeyboardEvent webKeyboardEvent)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 			{
 				webView.InjectKeyboardEvent(webKeyboardEvent);
 			}
@@ -181,7 +181,7 @@ namespace Illisian.Niva
 
 		public void KeyUp(WebKeyboardEvent webKeyboardEvent)
 		{
-			if (webView != null && webView.IsEnabled)
+            if (webView != null && webView.IsLive)
 				webView.InjectKeyboardEvent(webKeyboardEvent);
 		}
 	}

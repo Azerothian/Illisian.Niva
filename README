@@ -1,16 +1,25 @@
 Library Requirements
 
-Awesomium 1.6.3b SDK - https://awesomium.com/
+Awesomium 1.6.6 SDK - https://awesomium.com/
 
-Axiom 0.8.0.0RC - http://axiom3d.net - (Libs included in binrefs of Illisian.Niva.AxiomEngine)
+Axiom 0.8.3 - Nuget Packages
 
+DirectX 9 - http://www.microsoft.com/en-us/download/details.aspx?id=35
+
+SlimDx January 2012 - http://slimdx.org/download_jan12.php
 
 -- Known Issues -- 
+
 -- General
-Youtube crashes... dont complain, apparently its fixed in 1.6.4 of awesomium.
+
+[FIXED] Youtube crashes... dont complain, apparently its fixed in 1.6.4 of awesomium.
 
 -- Axiom Demo
-Cube turns black when it tries to render the web page
+
+[FIXED] Cube turns black when it tries to render the web page
+
+OpenGL does not work due to the inputreader requiring a dx window and crashing out.
 
 -- Winform Demo
+
 Key Input Does not work on WinForm Demo... Events dont fire on the winform...

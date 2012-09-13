@@ -97,7 +97,7 @@ namespace Illisian.Niva.AxiomEngine
 			_inputReader.UseKeyboardEvents = true;
 			_inputReader.UseMouseEvents = false;
 
-			_renderItems.Add(new BasicCube());
+			//_renderItems.Add(new BasicCube());
 			_renderItems.Add(new CubeBrowser());
 			foreach (var i in _renderItems)
 			{

@@ -43,6 +43,16 @@ namespace Illisian.Niva.AxiomEngine
 		{
 			Core.BrowserManager[_browserId].KeyUp(CreateWebKeyboardEvent(e, WebKeyType.KeyUp));
 			Core.BrowserManager[_browserId].KeyPress(CreateWebKeyboardEvent(e));
+
+            if (e.Key == KeyCodes.A)
+            {
+                _sceneNode.Rotate(new Vector3(0, 1, 0), 10f);
+            }
+            if ( e.Key == KeyCodes.D)
+            {
+                _sceneNode.Rotate(new Vector3(0, 1, 0), -1f);
+            }
+
 		}
 
 		void Input_KeyDown(object sender, Axiom.Input.KeyEventArgs e)
@@ -133,70 +143,88 @@ namespace Illisian.Niva.AxiomEngine
 
 		bool IsPressed = false;
 		Random r = new Random();
+        int mposx = 0;
+        int mposy = 0;
 		public void OnUpdateInput(Axiom.Input.InputReader inputReader)
 		{
-			string status = "off";
+            if (mposx != inputReader.AbsoluteMouseX || mposy != inputReader.AbsoluteMouseY)
+            {
+                mposx = inputReader.AbsoluteMouseX;
+                mposy = inputReader.AbsoluteMouseY;
 
-			if (inputReader.IsMousePressed(MouseButtons.Left))
-			{
-				status = "on";
-				IsPressed = true;
-			}
-			if (!inputReader.IsMousePressed(MouseButtons.Left) && IsPressed)
-			{
-				var _camera = Game.Context.Camera;
-				var _renderWindow = Game.Context.RenderWindow;
-				var _ray = _camera.GetCameraToViewportRay(
-						inputReader.AbsoluteMouseX / (float)_renderWindow.Width,
-						inputReader.AbsoluteMouseY / (float)_renderWindow.Height);
-				RaySceneQuery _sceneQuery = _root.SceneManager.CreateRayQuery(
-					_ray, (uint)SceneQueryTypeMask.WorldGeometry);
-				_sceneQuery.AddWorldFragmentType(WorldFragmentType.SingleIntersection);
-				_sceneQuery.AddWorldFragmentType(WorldFragmentType.CustomGeometry);
-				var results = _sceneQuery.Execute();
+                Core.BrowserManager[_browserId].MouseMove(mposx, mposy);
+            }
+            
+            
+            string status = "off";
 
-				
-				foreach (RaySceneQueryResultEntry result in results)
-				{
+            if (inputReader.IsMousePressed(MouseButtons.Left))
+            {
+                status = "on";
+                IsPressed = true;
 
-					if (result.SceneObject != null)
-					{
-						result.SceneObject.ShowBoundingBox = true;
-						var woot = _ray.GetPoint(result.Distance);
-						Vector3[] corners = result.SceneObject.GetWorldBoundingBox().Corners;
+                Core.BrowserManager[_browserId].MouseDown(MouseButton.Left);
 
-						var res = (from v in corners
-								   orderby v.Distance(woot)
-								   select v).Take(4);
-						//var i = 1;
-						//i++;
+            }
+            if (!inputReader.IsMousePressed(MouseButtons.Left) && IsPressed)
+            {
+                Core.BrowserManager[_browserId].MouseUp(MouseButton.Left);
 
-						foreach (var v in res)
-						{
-							var e = _root.SceneManager.CreateEntity("1BasicCube" + r.Next().ToString(), PrefabEntity.Cube);
-							e.MaterialName = "CBDynamicMaterial";
-							
-							var s = Root.Instance.SceneManager.RootSceneNode.CreateChildSceneNode();
-							s.Position = v;
-							s.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-							s.AttachObject(e);
-							s.Yaw(45);
-						}
-
-					}
-				}
+                //var _camera = Game.Context.Camera;
+                //var _renderWindow = Game.Context.RenderWindow;
+                //var _ray = _camera.GetCameraToViewportRay(
+                //        inputReader.AbsoluteMouseX / (float)_renderWindow.Width,
+                //        inputReader.AbsoluteMouseY / (float)_renderWindow.Height);
+                //RaySceneQuery _sceneQuery = _root.SceneManager.CreateRayQuery(
+                //    _ray, (uint)SceneQueryTypeMask.WorldGeometry);
+                //_sceneQuery.AddWorldFragmentType(WorldFragmentType.SingleIntersection);
+                //_sceneQuery.AddWorldFragmentType(WorldFragmentType.CustomGeometry);
+                //var results = _sceneQuery.Execute();
 
 
+                //foreach (RaySceneQueryResultEntry result in results)
+                //{
 
-				IsPressed = false;
+                //    if (result.SceneObject != null)
+                //    {
+                        
 
-			}
+                       // result.SceneObject.ShowBoundingBox = true;
+                        //var woot = _ray.GetPoint(result.Distance);
+                        //Vector3[] corners = result.SceneObject.GetWorldBoundingBox().Corners;
+
+                        //var res = (from v in corners
+                        //           orderby v.Distance(woot)
+                        //           select v).Take(4);
+                        ////var i = 1;
+                        ////i++;
+
+                        //foreach (var v in res)
+                        //{
+                        //    var e = _root.SceneManager.CreateEntity("1BasicCube" + r.Next().ToString(), PrefabEntity.Cube);
+                        //    e.MaterialName = "CBDynamicMaterial";
+
+                        //    var s = Root.Instance.SceneManager.RootSceneNode.CreateChildSceneNode();
+                        //    s.Position = v;
+                        //    s.Scale = new Vector3(0.5f, 0.5f, 0.5f);
+                        //    s.AttachObject(e);
+                        //    s.Yaw(45);
+                        //}
+
+                //    }
+                //}
 
 
-			_element.Text = String.Format("X: {0} Y: {1} Status: {2}", 
-				inputReader.AbsoluteMouseX,
-				inputReader.AbsoluteMouseY, 
-				status);
+
+                IsPressed = false;
+
+            }
+
+
+            //_element.Text = String.Format("X: {0} Y: {1} Status: {2}", 
+            //    inputReader.AbsoluteMouseX,
+            //    inputReader.AbsoluteMouseY, 
+            //    status);
 
 
 		}
@@ -206,28 +234,28 @@ namespace Illisian.Niva.AxiomEngine
 
 
 
-			_panel = (OverlayElementContainer)OverlayManager.Instance.Elements.CreateElementFromFactory("Panel", "DebugPanel");
-			_panel.SetPosition(1, 1);
-			_panel.SetDimensions(1, 1);
-			_panel.ScreenLeft(0);
-			_panel.ScreenTop(0);
+            //_panel = (OverlayElementContainer)OverlayManager.Instance.Elements.CreateElementFromFactory("Panel", "DebugPanel");
+            //_panel.SetPosition(1, 1);
+            //_panel.SetDimensions(1, 1);
+            //_panel.ScreenLeft(0);
+            //_panel.ScreenTop(0);
 
-			_element = (TextArea)OverlayManager.Instance.Elements.CreateElementFromFactory("TextArea", "DebugTexy");
-			_element.FontName = "Arial";
-			_element.Text = "Click ON";
-			_element.MetricsMode = MetricsMode.Pixels;
-			_element.SetDimensions(1, 1);
-			_element.SetPosition(1, 1);
-			_element.CharHeight = 48;
-			_element.Color = ColorEx.Blue;
-			_element.Show();
-			_panel.AddChild(_element);
-			_panel.Show();
+            //_element = (TextArea)OverlayManager.Instance.Elements.CreateElementFromFactory("TextArea", "DebugTexy");
+            //_element.FontName = "Arial";
+            //_element.Text = "Click ON";
+            //_element.MetricsMode = MetricsMode.Pixels;
+            //_element.SetDimensions(1, 1);
+            //_element.SetPosition(1, 1);
+            //_element.CharHeight = 48;
+            //_element.Color = ColorEx.Blue;
+            //_element.Show();
+            //_panel.AddChild(_element);
+            //_panel.Show();
 
-			_overlay = OverlayManager.Instance.Create("DebugOverlay");
-			_overlay.ZOrder = 600;
-			_overlay.AddElement(_panel);
-			_overlay.Show();
+            //_overlay = OverlayManager.Instance.Create("DebugOverlay");
+            //_overlay.ZOrder = 600;
+            //_overlay.AddElement(_panel);
+            //_overlay.Show();
 
 		}
 
